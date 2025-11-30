@@ -1,4 +1,4 @@
-package com._Semestre.Api_MongoDb.service;
+package com.semestre.apimongodb.service;
 
 import java.util.List;
 import java.util.UUID;
@@ -6,8 +6,8 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com._Semestre.Api_MongoDb.model.Product;
-import com._Semestre.Api_MongoDb.repository.ProductRepository;
+import com.semestre.apimongodb.model.Product;
+import com.semestre.apimongodb.repository.ProductRepository;
 
 @Service
 public class ProductService {

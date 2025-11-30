@@ -1,7 +1,0 @@
-spring:
-  #data:
-   #mongodb:
-    #uri: mongodb+srv://dieiherrera_db_user:DLq0bzSTkEfr4xVi@cluster0.iubjkq3.mongodb.net/?appName=Cluster0
-    #database: PasteleriaMongoDB
-  application:
-    name: Api_MongoDb

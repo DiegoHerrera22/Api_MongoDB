@@ -1,4 +1,4 @@
-package com._Semestre.Api_MongoDb.model;
+package com.semestre.apimongodb.model;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;

@@ -1,6 +1,7 @@
-package com._Semestre.Api_MongoDb.repository;
-import com._Semestre.Api_MongoDb.model.Product;
+package com.semestre.apimongodb.repository;
 import org.springframework.data.mongodb.repository.MongoRepository;
+
+import com.semestre.apimongodb.model.Product;
 
 public interface ProductRepository extends MongoRepository<Product, String>{
 

@@ -1,4 +1,4 @@
-package com._Semestre.Api_MongoDb;
+package com.semestre.apimongodb;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

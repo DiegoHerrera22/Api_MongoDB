@@ -1,4 +1,4 @@
-package com._Semestre.Api_MongoDb;
+package com.semestre.apimongodb;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
