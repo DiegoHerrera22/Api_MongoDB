@@ -38,13 +38,17 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
     return http
             .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(auth -> auth
-                    // Endpoints públicos
+
+                    // Endpoints públicos (no requieren login)
                     .requestMatchers("/auth/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                    .requestMatchers("/products/**").permitAll()   // <--- WEB SIN LOGIN
 
-                    // --- ADMIN TIENE ACCESO COMPLETO ---
-                    .requestMatchers("/**").hasRole("ADMIN")
+                    // Permisos especiales para ADMIN
+                    .requestMatchers("/regions/**").hasRole("ADMIN")
+                    .requestMatchers("/products/**").hasRole("ADMIN")   // POST/PUT/DELETE productos para admin
+                    .requestMatchers("/blog/**").hasRole("ADMIN")
 
-                    // Cualquier otro usuario autenticado
+                    // Usuarios autenticados (cualquier rol)
                     .anyRequest().authenticated()
             )
             .sessionManagement(session -> session
