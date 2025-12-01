@@ -33,22 +33,33 @@ public class AuthService {
     }
 
     public User register(RegisterRequest registerRequest) {
-        User user = new User();
-        user.setId(UUID.randomUUID().toString().split("-")[0]);
-        user.setUsername(registerRequest.getUsername());
-        user.setEmail(registerRequest.getEmail());
-        user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
-        user.setRegionId(registerRequest.getRegionId());
-        user.setRole(registerRequest.getRole() == null ? "ROLE_USER" : registerRequest.getRole());
-        return userRepository.save(user);
+    User user = new User();
+    user.setId(UUID.randomUUID().toString().split("-")[0]);
+    user.setUsername(registerRequest.getUsername());
+    user.setEmail(registerRequest.getEmail());
+    user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
+    user.setRegionId(registerRequest.getRegionId());
+
+    // --- ASIGNAR ROL AUTOMÁTICAMENTE SEGÚN EL DOMINIO ---
+    String email = registerRequest.getEmail().toLowerCase();
+
+    if (email.endsWith("@admin.com") || email.endsWith("@duocuc.cl")) {
+        user.setRole("ROLE_ADMIN");
+    } else {
+        user.setRole("ROLE_USER");
     }
+
+    return userRepository.save(user);
+}
 
     public AuthResponse login(AuthRequest authRequest) throws AuthenticationException {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
 
         if (authentication.isAuthenticated()) {
-            String token = jwtService.generateToken(authRequest.getUsername());
+            User user = userRepository.findByUsername(authRequest.getUsername())
+            .orElseThrow(() -> new RuntimeException("User not found"));
+            String token = jwtService.generateToken(user.getUsername(), user.getRole());
             return new AuthResponse(token);
         }
         throw new AuthenticationException("Authentication failed") {

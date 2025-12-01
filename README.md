@@ -38,3 +38,26 @@ TOKEN=$(curl -s -X POST http://localhost:8080/auth/login \
 # Call a protected endpoint
 curl -H "Authorization: Bearer $TOKEN" http://localhost:8080/product
 ```
+
+
+# Ejemplo de crear un admin
+
+"""
+Roles:
+
+ROLE_ADMIN
+ROLE_USER
+
+
+Los usuarios con estos dominios:
+
+@admin.com
+
+@duocuc.cl
+
+→ Registran automáticamente como ROLE_ADMIN
+
+✔ Todos los demás:
+
+→ Automáticamente ROLE_USER
+"""
