@@ -26,7 +26,8 @@ public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final UserDetailsService userDetailsService;
 
-    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter, UserDetailsService userDetailsService) {
+    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter,
+                          UserDetailsService userDetailsService) {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
         this.userDetailsService = userDetailsService;
     }
@@ -37,31 +38,32 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
 
-                        // ============================
-                        // RUTAS PÚBLICAS
-                        // ============================
-                        .requestMatchers(
-                                "/auth/**",
-                                "/swagger-ui/**",
-                                "/v3/api-docs/**"
-                        ).permitAll()
+                        // =======================
+                        // PUBLIC ENDPOINTS
+                        // =======================
+                        .requestMatchers("/auth/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
 
-                        // Productos GET → públicos
+                        // PRODUCTS GET are public
                         .requestMatchers(HttpMethod.GET, "/products/**").permitAll()
 
-                        // ============================
-                        // RUTAS ADMIN (protección)
-                        // ============================
+                        // REGIONS must be fully public (Android app)
+                        .requestMatchers(HttpMethod.GET, "/regions").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/regions/**").permitAll()
+
+                        // =======================
+                        // ADMIN ONLY
+                        // =======================
                         .requestMatchers(HttpMethod.POST, "/products/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/products/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/products/**").hasRole("ADMIN")
 
-                        .requestMatchers("/regions/**").hasRole("ADMIN")
-                        .requestMatchers("/blog/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/regions/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/regions/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/regions/**").hasRole("ADMIN")
 
-                        // ============================
-                        // CUALQUIER OTRO ENDPOINT
-                        // ============================
+                        // =======================
+                        // EVERYTHING ELSE → AUTH REQUIRED
+                        // =======================
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session ->
@@ -81,7 +83,8 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+    public AuthenticationManager authenticationManager(
+            AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
 
