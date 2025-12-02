@@ -29,15 +29,14 @@ public class RegionService {
     }
 
     public Region updateRegion(Region region) {
-        Region existingRegion = regionRepository.findById(region.getId()).orElse(null);
-        if (existingRegion != null) {
-            existingRegion.setName(region.getName());
-            existingRegion.setCountry(region.getCountry());
-            existingRegion.setAbbreviation(region.getAbbreviation());
-            return regionRepository.save(existingRegion);
-        }
-        return null;
+    Region existing = regionRepository.findById(region.getId()).orElse(null);
+    if (existing != null) {
+        existing.setNombre(region.getNombre());
+        existing.setComunas(region.getComunas());
+        return regionRepository.save(existing);
     }
+    return null;
+}
 
     public String deleteRegion(String id) {
         regionRepository.deleteById(id);
