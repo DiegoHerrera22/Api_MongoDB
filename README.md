@@ -10,14 +10,13 @@ API REST
      "username": "testuser",
      "email": "testuser@example.com",
      "password": "password123",
-     "regionId": "<existing-region-id>",
-     "role": "USER"
+     "regionId": "<existing-region-id>"
    }
    ```
 3. **Login** to get a JWT (POST `http://localhost:8080/auth/login`) with JSON body:
    ```json
    {
-     "username": "testuser",
+     "email": "testuser@example.com",
      "password": "password123"
    }
    ```
@@ -33,7 +32,7 @@ If you prefer cURL, the same flow works with:
 # Login
 TOKEN=$(curl -s -X POST http://localhost:8080/auth/login \
   -H "Content-Type: application/json" \
-  -d '{"username":"testuser","password":"password123"}' | jq -r '.token')
+  -d '{"email":"testuser@example.com","password":"password123"}' | jq -r '.token')
 
 # Call a protected endpoint
 curl -H "Authorization: Bearer $TOKEN" http://localhost:8080/product

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.semestre.apimongodb.dto.AuthRequest;
 import com.semestre.apimongodb.dto.AuthResponse;
 import com.semestre.apimongodb.dto.RegisterRequest;
+import com.semestre.apimongodb.dto.UserResponse;
 import com.semestre.apimongodb.model.User;
 import com.semestre.apimongodb.repository.UserRepository;
 import com.semestre.apimongodb.security.JwtService;
@@ -32,38 +33,48 @@ public class AuthService {
         this.jwtService = jwtService;
     }
 
-    public User register(RegisterRequest registerRequest) {
-    User user = new User();
-    user.setId(UUID.randomUUID().toString().split("-")[0]);
-    user.setUsername(registerRequest.getUsername());
-    user.setEmail(registerRequest.getEmail());
-    user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
-    user.setRegionId(registerRequest.getRegionId());
+    public UserResponse register(RegisterRequest registerRequest) {
+        User user = new User();
+        user.setId(UUID.randomUUID().toString().split("-")[0]);
+        user.setUsername(registerRequest.getUsername());
+        user.setEmail(registerRequest.getEmail());
+        user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
+        user.setRegionId(registerRequest.getRegionId());
+        user.setRole(resolveRole(registerRequest.getEmail()));
 
-    // --- ASIGNAR ROL AUTOMÁTICAMENTE SEGÚN EL DOMINIO ---
-    String email = registerRequest.getEmail().toLowerCase();
-
-    if (email.endsWith("@admin.com") || email.endsWith("@duocuc.cl")) {
-        user.setRole("ROLE_ADMIN");
-    } else {
-        user.setRole("ROLE_USER");
+        User savedUser = userRepository.save(user);
+        return toUserResponse(savedUser);
     }
-
-    return userRepository.save(user);
-}
 
     public AuthResponse login(AuthRequest authRequest) throws AuthenticationException {
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
+                new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword()));
 
         if (authentication.isAuthenticated()) {
-            User user = userRepository.findByUsername(authRequest.getUsername())
-            .orElseThrow(() -> new RuntimeException("User not found"));
-            String token = jwtService.generateToken(user.getUsername(), user.getRole());
+            User user = userRepository.findByEmail(authRequest.getEmail())
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+            String token = jwtService.generateToken(user.getEmail(), user.getRole());
             return new AuthResponse(token);
         }
         throw new AuthenticationException("Authentication failed") {
             private static final long serialVersionUID = 1L;
         };
+    }
+
+    private String resolveRole(String email) {
+        String normalizedEmail = email.toLowerCase();
+        if (normalizedEmail.endsWith("@admin.com") || normalizedEmail.endsWith("@duocuc.cl")) {
+            return "ROLE_ADMIN";
+        }
+        return "ROLE_USER";
+    }
+
+    private UserResponse toUserResponse(User user) {
+        return new UserResponse(
+                user.getId(),
+                user.getUsername(),
+                user.getEmail(),
+                user.getRegionId(),
+                user.getRole());
     }
 }

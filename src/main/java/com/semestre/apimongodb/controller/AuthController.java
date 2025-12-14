@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.semestre.apimongodb.dto.AuthRequest;
 import com.semestre.apimongodb.dto.AuthResponse;
 import com.semestre.apimongodb.dto.RegisterRequest;
-import com.semestre.apimongodb.model.User;
+import com.semestre.apimongodb.dto.UserResponse;
 import com.semestre.apimongodb.service.AuthService;
 
 @RestController
@@ -25,7 +25,7 @@ public class AuthController {
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    public User register(@RequestBody RegisterRequest registerRequest) {
+    public UserResponse register(@RequestBody RegisterRequest registerRequest) {
         return authService.register(registerRequest);
     }
 

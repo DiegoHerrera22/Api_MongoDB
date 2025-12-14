@@ -1,11 +1,14 @@
 package com.semestre.apimongodb.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
-public class RegisterRequest {
+@AllArgsConstructor
+public class UserResponse {
+    private String id;
     private String username;
     private String email;
-    private String password;
     private String regionId;
+    private String role;
 }
