@@ -39,7 +39,7 @@ public class AuthService {
         user.setUsername(registerRequest.getUsername());
         user.setEmail(registerRequest.getEmail());
         user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
-        user.setRegionId(registerRequest.getRegionId());
+        user.setRegion(registerRequest.getRegion());
         user.setRole(resolveRole(registerRequest.getEmail()));
 
         User savedUser = userRepository.save(user);
@@ -74,7 +74,7 @@ public class AuthService {
                 user.getId(),
                 user.getUsername(),
                 user.getEmail(),
-                user.getRegionId(),
+                user.getRegion(),
                 user.getRole());
     }
 }

@@ -5,14 +5,23 @@ API REST
 ## Quickstart: testing authentication with Postman
 1. **Start the API** (for example: `mvn spring-boot:run`). Default port is `8080`.
 2. **Register a user** (POST `http://localhost:8080/auth/register`) with JSON body:
-   ```json
-   {
-     "username": "testuser",
-     "email": "testuser@example.com",
-     "password": "password123",
-     "regionId": "<existing-region-id>"
-   }
-   ```
+
+```json
+  {
+  "nombre": "Juan",
+  "apellido": "Perez",
+  "rut": "12.345.678-9",
+  "direccion": "Av. Siempre Viva 123",
+  "region": {
+    "id": "64fa9c...",
+    "nombre": "Maule",
+    "comunas": ["Talca", "Curicó"]
+  },
+  "comuna": "Talca",
+  "email": "juan@ejemplo.com",
+  "password": "password123"
+  }
+```
 3. **Login** to get a JWT (POST `http://localhost:8080/auth/login`) with JSON body:
    ```json
    {

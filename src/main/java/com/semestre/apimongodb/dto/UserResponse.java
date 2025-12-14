@@ -1,5 +1,7 @@
 package com.semestre.apimongodb.dto;
 
+import com.semestre.apimongodb.model.Region;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -9,6 +11,6 @@ public class UserResponse {
     private String id;
     private String username;
     private String email;
-    private String regionId;
+    private Region region;
     private String role;
 }

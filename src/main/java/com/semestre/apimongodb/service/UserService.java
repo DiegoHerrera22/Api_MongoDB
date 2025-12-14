@@ -43,7 +43,7 @@ public class UserService {
             if (user.getPassword() != null) {
                 existingUser.setPassword(passwordEncoder.encode(user.getPassword()));
             }
-            existingUser.setRegionId(user.getRegionId());
+            existingUser.setRegion(user.getRegion());
             existingUser.setRole(user.getRole() == null ? existingUser.getRole() : user.getRole());
             return userRepository.save(existingUser);
         }
