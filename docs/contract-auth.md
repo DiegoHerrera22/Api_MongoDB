@@ -19,6 +19,9 @@ para los procesos de registro y login de usuarios.
 ## 2) Registro de usuario
 
 ### POST /auth/register
+Content-Type: application/json
+
+Accept: application/json
 
 #### RegisterRequest
 ```json
@@ -68,6 +71,10 @@ Errores esperados
 
 ### POST /auth/login
 
+Content-Type: application/json
+
+Accept: application/json
+
 #### LoginRequest
 ```json
 {
@@ -87,16 +94,31 @@ Errores esperados
 
 401 Unauthorized: credenciales inválidas.
 
-## 4) Reglas de negocio
+## 4) Regiones (para cargar combos en el móvil)
 
-La API debe validar que la comuna seleccionada esté incluida dentro de region.comunas.
+### GET /regions
+
+#### Response 200 OK
+```json
+[
+  {
+    "id": "string",
+    "nombre": "string",
+    "comunas": ["string"]
+  }
+]
+```
+
+## 5) Reglas de negocio
+
+La API valida que comuna esté incluida dentro de region.comunas.
+
+La API valida que region.id exista en la colección regions y usa ese registro como fuente “oficial”.
 
 El campo role es definido exclusivamente por el servidor:
 
 Emails que terminan en @admin.com o @duocuc.cl → ROLE_ADMIN
 
 Cualquier otro dominio → ROLE_USER
-
-(Opcional recomendado) Validar que region.id exista en la colección regions.
 
 La API nunca debe exponer el campo password en ninguna respuesta.
