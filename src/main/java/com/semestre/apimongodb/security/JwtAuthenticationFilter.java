@@ -34,12 +34,14 @@ protected void doFilterInternal(HttpServletRequest request, HttpServletResponse 
 
         String path = request.getServletPath();
 
-        // ⛔ EXCLUIR rutas públicas
-        if (path.startsWith("/auth")) {   // <---- ESTA ES LA LÍNEA QUE TE FALTABA
-            filterChain.doFilter(request, response);
-            return;
-        }
-
+        // Excluir rutas públicas del filtro JWT (no se valida token aquí)
+        if (path.startsWith("/auth")
+        || path.startsWith("/regions")
+        || path.startsWith("/swagger-ui")
+        || path.startsWith("/v3/api-docs")) {
+    filterChain.doFilter(request, response);
+    return;
+}
         String authHeader = request.getHeader("Authorization");
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
