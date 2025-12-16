@@ -1,10 +1,13 @@
 package com.semestre.apimongodb.dto;
 
 import com.semestre.apimongodb.model.Region;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
-public class RegisterRequest {
+@AllArgsConstructor
+public class UserResponse {
+    private String id;
     private String nombre;
     private String apellido;
     private String rut;
@@ -12,5 +15,5 @@ public class RegisterRequest {
     private Region region;
     private String comuna;
     private String email;
-    private String password;
+    private String role;
 }

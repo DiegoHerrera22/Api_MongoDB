@@ -21,13 +21,13 @@ public class JwtService {
     @Value("${jwt.expiration}")
     private long jwtExpirationMs;
 
-    public String generateToken(String username, String role) {
+    public String generateToken(String email, String role) {
 
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + jwtExpirationMs);
 
         return Jwts.builder()
-                .setSubject(username)
+                .setSubject(email)
                 .claim("role", role) // add role to token
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)
@@ -43,8 +43,8 @@ public class JwtService {
         return extractAllClaims(token).get("role", String.class);
     }
 
-    public boolean isTokenValid(String token, String username) {
-        return extractUsername(token).equals(username) && !isTokenExpired(token);
+    public boolean isTokenValid(String token, String email) {
+        return extractUsername(token).equals(email) && !isTokenExpired(token);
     }
 
     private boolean isTokenExpired(String token) {

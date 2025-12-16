@@ -38,12 +38,16 @@ public class UserService {
     public User updateUser(User user) {
         User existingUser = userRepository.findById(user.getId()).orElse(null);
         if (existingUser != null) {
-            existingUser.setUsername(user.getUsername());
+            existingUser.setNombre(user.getNombre());
+            existingUser.setApellido(user.getApellido());
+            existingUser.setRut(user.getRut());
+            existingUser.setDireccion(user.getDireccion());
+            existingUser.setRegion(user.getRegion());
+            existingUser.setComuna(user.getComuna());
             existingUser.setEmail(user.getEmail());
             if (user.getPassword() != null) {
                 existingUser.setPassword(passwordEncoder.encode(user.getPassword()));
             }
-            existingUser.setRegionId(user.getRegionId());
             existingUser.setRole(user.getRole() == null ? existingUser.getRole() : user.getRole());
             return userRepository.save(existingUser);
         }
