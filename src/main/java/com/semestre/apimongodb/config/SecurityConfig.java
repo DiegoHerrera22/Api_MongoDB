@@ -1,5 +1,5 @@
 package com.semestre.apimongodb.config;
-
+import org.springframework.security.config.Customizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -33,46 +33,39 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http
-                .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(auth -> auth
+public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    return http
+            .cors(Customizer.withDefaults()) // ✅ importante
+            .csrf(AbstractHttpConfigurer::disable)
+            .authorizeHttpRequests(auth -> auth
 
-                        // =======================
-                        // PUBLIC ENDPOINTS
-                        // =======================
-                        .requestMatchers("/auth/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                    // ✅ permitir preflight
+                    .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
-                        // PRODUCTS GET are public
-                        .requestMatchers(HttpMethod.GET, "/products/**").permitAll()
+                    // PUBLIC
+                    .requestMatchers("/auth/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/products/**").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/regions").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/regions/**").permitAll()
 
-                        // REGIONS must be fully public (Android app)
-                        .requestMatchers(HttpMethod.GET, "/regions").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/regions/**").permitAll()
+                    // ADMIN ONLY
+                    .requestMatchers(HttpMethod.POST, "/products/**").hasRole("ADMIN")
+                    .requestMatchers(HttpMethod.PUT, "/products/**").hasRole("ADMIN")
+                    .requestMatchers(HttpMethod.DELETE, "/products/**").hasRole("ADMIN")
 
-                        // =======================
-                        // ADMIN ONLY
-                        // =======================
-                        .requestMatchers(HttpMethod.POST, "/products/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/products/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/products/**").hasRole("ADMIN")
+                    .requestMatchers(HttpMethod.POST, "/regions/**").hasRole("ADMIN")
+                    .requestMatchers(HttpMethod.PUT, "/regions/**").hasRole("ADMIN")
+                    .requestMatchers(HttpMethod.DELETE, "/regions/**").hasRole("ADMIN")
 
-                        .requestMatchers(HttpMethod.POST, "/regions/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/regions/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/regions/**").hasRole("ADMIN")
-
-                        // =======================
-                        // EVERYTHING ELSE → AUTH REQUIRED
-                        // =======================
-                        .anyRequest().authenticated()
-                )
-                .sessionManagement(session ->
-                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                )
-                .authenticationProvider(authenticationProvider())
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .build();
-    }
+                    .anyRequest().authenticated()
+            )
+            .sessionManagement(session ->
+                    session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            )
+            .authenticationProvider(authenticationProvider())
+            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+            .build();
+}
 
     @Bean
     public AuthenticationProvider authenticationProvider() {
