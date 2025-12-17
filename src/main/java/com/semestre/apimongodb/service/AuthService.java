@@ -110,7 +110,7 @@ public class AuthService {
 
     private String resolveRole(String email) {
         String normalizedEmail = email.toLowerCase();
-        if (normalizedEmail.endsWith("@admin.com") || normalizedEmail.endsWith("@duocuc.cl")) {
+        if (normalizedEmail.endsWith("@admin.com") || normalizedEmail.endsWith("@admin.cl") ||  normalizedEmail.endsWith("@duocuc.cl")) {
             return "ROLE_ADMIN";
         }
         return "ROLE_USER";
