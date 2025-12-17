@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import com.semestre.apimongodb.model.User;
 import com.semestre.apimongodb.repository.UserRepository;
 
+
+
 @Service
 public class UserService {
 
@@ -34,6 +36,10 @@ public class UserService {
     public User findUserById(String id) {
         return userRepository.findById(id).orElse(null);
     }
+
+    public User findByEmail(String email) {
+    return userRepository.findByEmail(email).orElse(null);
+}
 
     public User updateUser(User user) {
         User existingUser = userRepository.findById(user.getId()).orElse(null);

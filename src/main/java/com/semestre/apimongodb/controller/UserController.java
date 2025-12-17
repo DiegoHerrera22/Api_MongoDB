@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.Authentication;
 
 import com.semestre.apimongodb.model.User;
 import com.semestre.apimongodb.service.UserService;
@@ -39,6 +40,14 @@ public class UserController {
         return userService.findUserById(id);
     }
 
+    
+    @GetMapping("/me")
+    public User getMe(Authentication authentication) {
+        String email = authentication.getName();
+        return userService.findByEmail(email);
+    }
+
+
     @PutMapping
     public User updateUser(@RequestBody User user) {
         return userService.updateUser(user);
@@ -48,4 +57,6 @@ public class UserController {
     public String deleteUser(@PathVariable String id) {
         return userService.deleteUser(id);
     }
+
+
 }
